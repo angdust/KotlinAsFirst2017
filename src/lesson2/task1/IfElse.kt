@@ -54,9 +54,11 @@ fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
     val s = v1 * t1 + t2 * v2 + t3 * v3
-    if (s / 2 <= v1 * t1) return s / (2 * v1) else
-        if (s / 2 <= (v1 * t1 + v2 * t2)) return ((s / 2 - v1 * t1) / v2) + t1 else
-            return ((s / 2 - v1 * t1 - v2 * t2) / v3) + t1 + t2
+    when {
+        s / 2 <= v1 * t1 -> return s / (2 * v1)
+        s / 2 <= (v1 * t1 + v2 * t2) -> return ((s / 2 - v1 * t1) / v2) + t1
+        else -> return ((s / 2 - v1 * t1 - v2 * t2) / v3) + t1 + t2
+    }
 }
 
 /**
@@ -76,7 +78,7 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
         ((kingX == rookX1) || (kingY == rookY1)) && ((kingX != rookX2) && (kingY != rookY2)) -> 1
         ((kingX == rookX2) || (kingY == rookY2)) && ((kingX != rookX1) && (kingY != rookY1)) -> 2
         else -> 0
-//При условии, что фигуры не совпадают (нереалистично)
+    //При условии, что фигуры не совпадают (нереалистично)
 
     }
 
@@ -100,7 +102,7 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
         ((kingX != rookX) || (kingY != rookY)) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 2
         ((kingX == rookX) || (kingY == rookY)) && (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
         else -> 0
-//При условии, что фигуры не совпадают(нереалистично)
+    //При условии, что фигуры не совпадают(нереалистично)
     }
 
 }
@@ -114,10 +116,9 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val a1: Double
+    val a1: Double = maxOf(a, b, c)
     val b1: Double
     val c1: Double
-    a1 = maxOf(a, b, c)
     when (a1) {
         a -> {
             b1 = b; c1 = c
@@ -146,10 +147,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if ((d >= b) && (c >= a) && (c <= b)) return b - c
-        else if ((d >= b) && (c <= a)) return b - a
-            else if ((d <= b) && (d >= a) && (c <= a)) return d - a
-                else if ((d <= b) && (c >= a)) return d - c
-                    else return -1
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+    ((d >= b) && (c >= a) && (c <= b)) -> b - c
+    ((d >= b) && (c <= a)) -> b - a
+    ((d <= b) && (d >= a) && (c <= a)) -> d - a
+    ((d <= b) && (c >= a)) -> d - c
+    else -> -1
 }
