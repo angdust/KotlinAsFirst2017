@@ -3,7 +3,7 @@
 package lesson3.task1
 
 //import java.lang.Math.pow
-import java.lang.Math.sqrt
+import java.lang.Math.*
 
 /**
  * Пример
@@ -66,7 +66,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var count = 0
-    var num = n
+    var num = abs(n)
     do {
         count++
         num /= 10
@@ -125,7 +125,7 @@ fun minDivisor(n: Int): Int {
             }
         }
     } else return n
-    return 0
+    return 1
 }
 
 /**
@@ -150,17 +150,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..m) {
-        if (m % i == 0) {
-            if (n % i == 0) {
-                return false
-                break
-            }
-        }
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 /**
  * Простая
@@ -170,13 +160,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in m..n) {
-        if (sqrt(i.toDouble()) * 10 % 10 == 0.0) {
-            return true
-            break
-        }
-    }
-    return false
+    return if ((n == 1) && (m == 1)) true
+    else (ceil(sqrt(n.toDouble())) - ceil(sqrt(m.toDouble()))) >= 1
 }
 
 /**
@@ -187,19 +172,6 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double = TODO()
-/*{
-    var i = 1.0
-    var k = 1
-    var s = 0.0
-    if (x == 0.0) {
-        return 0.0
-    } else while (pow(x, i) / factorial((i.toInt())) > eps) {
-        s += k * pow(x, i) / factorial((i.toInt()))
-        k *= -1
-        i += 2
-    }
-    return s
-} */
 
 /**
  * Средняя
@@ -233,15 +205,7 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    var m = n
-    var m1 = 0
-    while (m > 0) {
-        m1 = m1 * 10 + m % 10
-        m /= 10
-    }
-    return n == m1
-}
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
@@ -270,13 +234,18 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var s = "1"
-    var i = 2
-    while (s.length < n) {
-        s += (i * i).toString()
-        i += 1
+    var n1 = 0
+    var i = 0
+    while (n > n1) {
+        i++
+        n1 += digitNumber(i * i)
     }
-    return s[n - 1].toInt() - '0'.toInt()
+    var p = i * i
+    for (i in n until n1) {
+        p /= 10
+    }
+    p %= 10
+    return p
 }
 
 /**
@@ -287,15 +256,16 @@ fun squareSequenceDigit(n: Int): Int {
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var x = 1
-    var x1 = 1
-    var x2: Int
-    var s = "11"
-    while (s.length < n) {
-        x2 = x1
-        x1 = x
-        x = x1 + x2
-        s += x.toString()
+    var n1 = 0
+    var i = 0
+    while (n1 < n) {
+        i++
+        n1 += digitNumber(fib(i))
     }
-    return s[n - 1].toInt() - '0'.toInt()
+    var x = fib(i)
+    for (i in n until n1) {
+        x /= 10
+    }
+    x %= 10
+    return x
 }
