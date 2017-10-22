@@ -344,6 +344,7 @@ fun russian(n: Int): String {
         if (listf[i] != 0) {
             when {
                 (i == 0) && (listf[1] != 1) -> list1.add(x1[listf[i] - 1])
+                (i == 1) && (listf[1] == 1) && (listf[0] == 0) -> list1.add(x2[listf[i] - 1])
                 (i == 0) && (listf[1] == 1) -> list1.add(x20[listf[i] - 1])
                 (i == 1) && (listf[1] != 1) -> list1.add(x2[listf[i] - 1])
                 i == 2 -> list1.add(x3[listf[i] - 1])
@@ -355,6 +356,7 @@ fun russian(n: Int): String {
             if (lists[j] != 0) {
                 when {
                     (j == 0) && (lists[1] != 1) -> list2.add(x10[lists[j] - 1])
+                    (j == 1) && (lists[1] == 1) && (lists[0] == 0) -> list2.add(x2[lists[j] - 1])
                     (j == 0) && (lists[1] == 1) -> list2.add(x20[lists[j] - 1])
                     (j == 1) && (lists[1] != 1) -> list2.add(x2[lists[j] - 1])
                     j == 2 -> list2.add(x3[lists[j] - 1])
