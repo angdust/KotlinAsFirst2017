@@ -300,12 +300,8 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
-    val listf = mutableListOf(0, 0, 0)
-    val lists = mutableListOf(0, 0, 0)
-    val list1 = mutableListOf<String>()
-    val list2 = mutableListOf<String>()
-    val listc = mutableListOf<String>()
+
+fun spwhen(list: MutableList<Int>, k: Int): MutableList<String> {
     val x1 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val x10 = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val x2 = listOf("десять", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят",
@@ -314,6 +310,26 @@ fun russian(n: Int): String {
             "девятьсот")
     val x20 = listOf("одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать",
             "семнадцать", "восемнадцать", "девятнадцать")
+    val list1 = mutableListOf<String>()
+    for (i in list.size - 1 downTo 0) {
+        if (list[i] != 0) {
+            when {
+                (i == 0) && (list[1] != 1) && (k == 0) -> list1.add(x1[list[i] - 1])
+                (i == 0) && (list[1] != 1) && (k == 1) -> list1.add(x10[list[i] - 1])
+                (i == 1) && (list[1] == 1) && (list[0] == 0) -> list1.add(x2[list[i] - 1])
+                (i == 0) && (list[1] == 1) -> list1.add(x20[list[i] - 1])
+                (i == 1) && (list[1] != 1) -> list1.add(x2[list[i] - 1])
+                i == 2 -> list1.add(x3[list[i] - 1])
+            }
+        }
+    }
+    return list1
+}
+
+fun russian(n: Int): String {
+    val listf = mutableListOf(0, 0, 0)
+    val lists = mutableListOf(0, 0, 0)
+    val listc = mutableListOf<String>()
     var f = 0
     var s = -1
     var st = s
@@ -343,29 +359,10 @@ fun russian(n: Int): String {
             f /= 10
         }
     }
-    for (i in listf.size - 1 downTo 0) {
-        if (listf[i] != 0) {
-            when {
-                (i == 0) && (listf[1] != 1) -> list1.add(x1[listf[i] - 1])
-                (i == 1) && (listf[1] == 1) && (listf[0] == 0) -> list1.add(x2[listf[i] - 1])
-                (i == 0) && (listf[1] == 1) -> list1.add(x20[listf[i] - 1])
-                (i == 1) && (listf[1] != 1) -> list1.add(x2[listf[i] - 1])
-                i == 2 -> list1.add(x3[listf[i] - 1])
-            }
-        }
-    }
+    val list1 = spwhen(listf, 0)
+    var list2: List<String> = listOf()
     if (s != -1) {
-        for (j in lists.size - 1 downTo 0) {
-            if (lists[j] != 0) {
-                when {
-                    (j == 0) && (lists[1] != 1) -> list2.add(x10[lists[j] - 1])
-                    (j == 1) && (lists[1] == 1) && (lists[0] == 0) -> list2.add(x2[lists[j] - 1])
-                    (j == 0) && (lists[1] == 1) -> list2.add(x20[lists[j] - 1])
-                    (j == 1) && (lists[1] != 1) -> list2.add(x2[lists[j] - 1])
-                    j == 2 -> list2.add(x3[lists[j] - 1])
-                }
-            }
-        }
+        list2 = spwhen(lists, 1)
     }
     if (s != -1) {
         val s10 = st % 100
