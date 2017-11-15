@@ -78,7 +78,7 @@ fun dateStrToDigit(str: String): String {
         for (part in parts) {
             str1.add(part)
         }
-        if ((str1[3] == "") or (str1.size > 3)) return ""
+        if ((str1[3] == "") or (str1.size > 6)) return ""
         else {
             if (str1[5].toInt() > 0) year = str1[5].toInt()
             for (i in 0 until x.size) {
@@ -177,16 +177,18 @@ fun flattenPhoneNumber(phone: String): String {
     val parts = phone.split(" ", "(", ")", "-", "+")
     val phone1 = mutableListOf<Int>()
     var k = 0
-    if (phone[0] == '+') k = 1
-    return try {
-        for (part in parts) {
-            if (part != "") phone1.add(part.toInt())
+    if (phone != "") {
+        if (phone[0] == '+') k = 1
+        return try {
+            for (part in parts) {
+                if (part != "") phone1.add(part.toInt())
+            }
+            if (k == 1) "+" + phone1.joinToString(separator = "")
+            else phone1.joinToString(separator = "")
+        } catch (part: NumberFormatException) {
+            ""
         }
-        if (k == 1) "+" + phone1.joinToString(separator = "")
-        else phone1.joinToString(separator = "")
-    } catch (part: NumberFormatException) {
-        ""
-    }
+    } else return ""
 }
 
 /**
@@ -288,31 +290,31 @@ fun mostExpensive(description: String): String {
     val correctDescription = mutableListOf<String>()
     var max = 0.0
     var k = 1
-        try {
-            max = description1[1].toDouble()
-        } catch (max: Exception) {
-            return ""
-        }
+    try {
+        max = description1[1].toDouble()
+    } catch (max: Exception) {
+        return ""
+    }
     for (part in description1) {
         if (part != "") correctDescription.add(part)
     }
-        try {
-            for (i in 3 until correctDescription.size step 2) {
-                if (correctDescription[i].toDouble() >= 0.0) {
-                    if (correctDescription[i].toDouble() > max) {
-                        max = correctDescription[i].toDouble()
-                        k = i
-                    }
-                } else {
-                    return ""
-                    break
+    try {
+        for (i in 3 until correctDescription.size step 2) {
+            if (correctDescription[i].toDouble() >= 0.0) {
+                if (correctDescription[i].toDouble() > max) {
+                    max = correctDescription[i].toDouble()
+                    k = i
                 }
+            } else {
+                return ""
+                break
             }
-        } catch (i: NumberFormatException) {
-            return ""
         }
+    } catch (i: NumberFormatException) {
+        return ""
+    }
 
-    return correctDescription[k-1]
+    return correctDescription[k - 1]
 }
 
 /**
