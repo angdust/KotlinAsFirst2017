@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson5.task1
 
 /**
@@ -48,12 +49,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -66,7 +65,52 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val x = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
+            "октября", "ноября", "декабря")
+    val parts = str.split(" ")
+    try {
+        var day = 0
+        var month = 0
+        var monthS = ""
+        var year = 0
+        val str1 = mutableListOf("", "", "")
+        for (part in parts) {
+            str1.add(part)
+        }
+        if (str1[3] == "") return ""
+        else {
+            if (str1[5].toInt() > 0) year = str1[5].toInt()
+            for (i in 0 until x.size) {
+                if (str1[4] == x[i]) {
+                    month = i + 1
+                }
+            }
+            if (month != 0) {
+                when {
+                    (month <= 7) && (month % 2 == 1) && (str1[3].toInt() <= 31) -> day = str1[3].toInt()
+                    (month > 7) && (month % 2 == 0) && (str1[3].toInt() <= 31) -> day = str1[3].toInt()
+                    (month != 2) && (month <= 7) && (month % 2 == 0) && (str1[3].toInt() <= 30) -> day = str1[3].toInt()
+                    (month != 2) && (month > 7) && (month % 2 == 1) && (str1[3].toInt() <= 30) -> day = str1[3].toInt()
+                    (month == 2) && (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
+                            && (str1[3].toInt() <= 29) -> day = str1[3].toInt()
+                    (month == 2) && (((year % 4 != 0) || (year % 100 == 0)) || (year % 400 != 0))
+                            && (str1[3].toInt() <= 28) -> day = str1[3].toInt()
+                }
+            }
+            monthS = if (month < 10) "0" + month.toString()
+            else month.toString()
+            var dayS = day.toString()
+            dayS = if (day < 10) "0" + dayS
+            else dayS
+            if (month != 0) return dayS + "." + monthS + "." + year.toString()
+        }
+        return ""
+    } catch (month: IndexOutOfBoundsException) {
+        return ""
+    }
+
+}
 
 /**
  * Средняя
@@ -75,7 +119,47 @@ fun dateStrToDigit(str: String): String = TODO()
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val x = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
+            "октября", "ноября", "декабря")
+    val parts = digital.split(".")
+    val digital1 = mutableListOf<Int>()
+    var mounth = ""
+    var day = 0
+    var year = 0
+    try {
+        for (part in parts) {
+            digital1.add(part.toInt())
+        }
+        if (digital1.size == 3) {
+            if (digital1[2] > 0) {
+                year = digital1[2]
+            }
+            for (i in 0..12) {
+                if (digital1[1] == i) mounth = x[i - 1]
+            }
+            if (digital1[1] != 0) {
+                when {
+                    (digital1[1] <= 7) && (digital1[1] % 2 == 1) && (digital1[0] <= 31) -> day = digital1[0]
+                    (digital1[1] > 7) && (digital1[1] % 2 == 0) && (digital1[0] <= 31) -> day = digital1[0]
+                    (digital1[1] != 2) && (digital1[1] <= 7) && (digital1[1] % 2 == 0) && (digital1[0] <= 30)
+                    -> day = digital1[0]
+                    (digital1[1] != 2) && (digital1[1] > 7) && (digital1[1] % 2 == 1) && (digital1[0] <= 30)
+                    -> day = digital1[0]
+                    (digital1[1] == 2) && (((digital1[2] % 4 == 0) && (digital1[2] % 100 != 0)) || (digital1[2] % 400 == 0))
+                            && (digital1[0] <= 29) -> day = digital1[0]
+                    (digital1[1] == 2) && (((digital1[2] % 4 != 0) || (digital1[2] % 100 == 0)) || (digital1[2] % 400 != 0))
+                            && (digital1[0] <= 28) -> day = digital1[0]
+                }
+            }
+            return day.toString() + " " + mounth + " " + year.toString()
+        } else return ""
+    } catch (digital1: ArrayIndexOutOfBoundsException) {
+        return ""
+    } catch (part: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -89,7 +173,21 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val parts = phone.split(" ", "(", ")", "-", "+")
+    val phone1 = mutableListOf<Int>()
+    var k = 0
+    if (phone[0] == '+') k = 1
+    return try {
+        for (part in parts) {
+            if (part != "") phone1.add(part.toInt())
+        }
+        if (k == 1) "+" + phone1.joinToString(separator = "")
+        else phone1.joinToString(separator = "")
+    } catch (part: NumberFormatException) {
+        ""
+    }
+}
 
 /**
  * Средняя
@@ -101,7 +199,23 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val parts = jumps.split(" ", "-", "%")
+    val results = mutableListOf<Int>()
+    var max = -1
+    return try {
+        for (part in parts) {
+            if (part != "") results.add(part.toInt())
+        }
+        for (i in results) {
+            if (i > max) max = i
+        }
+        max
+
+    } catch (part: NumberFormatException) {
+        -1
+    }
+}
 
 /**
  * Сложная
@@ -124,7 +238,28 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val expressinon1 = expression.split(" ")
+    var sum = 0
+    try {
+        sum = expressinon1[0].toInt()
+    } catch (sum: NumberFormatException) {
+        throw IllegalArgumentException()
+    }
+    try {
+        for (i in 2 until expressinon1.size step 2) {
+            when {
+                expressinon1[i - 1] == "+" -> sum += expressinon1[i].toInt()
+                expressinon1[i - 1] == "-" -> sum -= expressinon1[i].toInt()
+                else -> throw IllegalArgumentException()
+            }
+        }
+
+    } catch (i: NumberFormatException) {
+        throw IllegalArgumentException()
+    }
+    return sum
+}
 
 /**
  * Сложная
@@ -148,7 +283,37 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val description1 = description.split(" ", ";")
+    val correctDescription = mutableListOf<String>()
+    var max = 0.0
+    var k = 1
+        try {
+            max = description1[1].toDouble()
+        } catch (max: Exception) {
+            return ""
+        }
+    for (part in description1) {
+        if (part != "") correctDescription.add(part)
+    }
+        try {
+            for (i in 3 until correctDescription.size step 2) {
+                if (correctDescription[i].toDouble() > 0.0) {
+                    if (correctDescription[i].toDouble() > max) {
+                        max = correctDescription[i].toDouble()
+                        k = i
+                    }
+                } else {
+                    return ""
+                    break
+                }
+            }
+        } catch (i: NumberFormatException) {
+            return ""
+        }
+
+    return correctDescription[k-1]
+}
 
 /**
  * Сложная
