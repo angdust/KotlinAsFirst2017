@@ -78,7 +78,7 @@ fun dateStrToDigit(str: String): String {
         for (part in parts) {
             str1.add(part)
         }
-        if (str1[3] == "") return ""
+        if ((str1[3] == "") or (str1.size > 3)) return ""
         else {
             if (str1[5].toInt() > 0) year = str1[5].toInt()
             for (i in 0 until x.size) {
@@ -298,7 +298,7 @@ fun mostExpensive(description: String): String {
     }
         try {
             for (i in 3 until correctDescription.size step 2) {
-                if (correctDescription[i].toDouble() > 0.0) {
+                if (correctDescription[i].toDouble() >= 0.0) {
                     if (correctDescription[i].toDouble() > max) {
                         max = correctDescription[i].toDouble()
                         k = i
