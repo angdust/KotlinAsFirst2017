@@ -95,7 +95,7 @@ fun dateStrToDigit(str: String): String {
             month = x.indexOf(str1[1]) + 1
             if (month < 1) return ""
             day = daysInMonth(str1[0].toInt(), month, year)
-            return String.format("%02d.%02d.%04d", day, month, year)
+            return String.format("%02d.%02d.%d", day, month, year)
         }
     } catch (month: NumberFormatException) {
         return ""
@@ -185,12 +185,15 @@ fun bestLongJump(jumps: String): Int {
     val results:MutableList<Int>  = mutableListOf()
     return try {
         for (part in parts)
-             results.add(part.toInt())
+            results.add(part.toInt())
         results.max()!!
 
     } catch (part: NumberFormatException) {
         -1
+    } catch (results: NullPointerException) {
+        -1
     }
+
 }
 
 /**
