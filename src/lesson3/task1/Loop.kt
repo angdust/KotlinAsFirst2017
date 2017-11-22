@@ -121,7 +121,6 @@ fun minDivisor(n: Int): Int {
         for (i in 2..n) {
             if (n % i == 0) {
                 return i
-                break
             }
         }
     } else return n
@@ -137,7 +136,6 @@ fun maxDivisor(n: Int): Int {
     for (i in n - 1 downTo 2) {
         if (n % i == 0) {
             return i
-            break
         }
     }
     return 1
@@ -222,7 +220,6 @@ fun hasDifferentDigits(n: Int): Boolean {
     while (n1 > 0) {
         if (n1 % 10 != x) {
             return true
-            break
         }
         n1 /= 10
     }

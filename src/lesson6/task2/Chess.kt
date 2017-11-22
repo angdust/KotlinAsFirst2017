@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson6.task2
 
 /**
@@ -23,7 +24,7 @@ data class Square(val column: Int, val row: Int) {
      */
     fun notation(): String {
         val x = listOf("a", "b", "c", "d", "e", "f", "g", "h")
-        return if (inside()) x[column - 1]+"$row"
+        return if (inside()) x[column - 1] + "$row"
         else ""
     }
 }
@@ -36,16 +37,16 @@ data class Square(val column: Int, val row: Int) {
  * Если нотация некорректна, бросить IllegalArgumentException
  */
 fun square(notation: String): Square {
-       val x = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
+    val x = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
     var c = -1
     val column = notation[0]
-    for (i in 0 until x.size) {
-        if (column == x[i]) c = i
-    }
-if ((c == -1) || (notation[1].toString().toInt() > 8) || (notation[1].toString().toInt() < 1)) {
-    throw IllegalArgumentException()
-} else return Square(c + 1, notation[1].toString().toInt() )
+    c = x.indexOf(column)
+    if ((c == -1) || (notation[1].toString().toInt() > 8) || (notation[1].toString().toInt() < 1) ||
+            (notation.length != 2)) {
+        throw IllegalArgumentException()
+    } else return Square(c + 1, notation[1].toString().toInt())
 }
+
 /**
  * Простая
  *

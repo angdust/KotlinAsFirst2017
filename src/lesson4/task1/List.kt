@@ -176,12 +176,10 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var y = 0.0
-    return if (p.isNotEmpty()) {
-        for (i in 0 until p.size) {
-            y += pow(x, i.toDouble()) * p[i]
-        }
-        y
-    } else 0.0
+    for (i in 0 until p.size) {
+        y += pow(x, i.toDouble()) * p[i]
+    }
+    return y
 }
 
 /**
@@ -215,10 +213,14 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     val list = mutableListOf<Int>()
     var n1 = n
-    while (minDivisor(n1) != 1) {
-        list.add(minDivisor(n1))
-        n1 /= minDivisor(n1)
-    }
+        for (i in 2..Math.sqrt(n.toDouble()).toInt()) {
+            while (n1 % i == 0) {
+                list.add(i)
+                n1 /= i
+            }
+        }
+    if (n1 != 1) list.add(n1)
+
     return list
 }
 
@@ -228,15 +230,7 @@ fun factorize(n: Int): List<Int> {
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String {
-    val list = mutableListOf<Int>()
-    var n1 = n
-    while (minDivisor(n1) != 1) {
-        list.add(minDivisor(n1))
-        n1 /= minDivisor(n1)
-    }
-    return list.joinToString(separator = "*")
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -301,7 +295,7 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 
-fun spwhen(list: MutableList<Int>, k: Int): MutableList<String> {
+fun spwhen(list: List<Int>, k: Int): MutableList<String> {
     val x1 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val x10 = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val x2 = listOf("десять", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят",
@@ -326,38 +320,35 @@ fun spwhen(list: MutableList<Int>, k: Int): MutableList<String> {
     return list1
 }
 
+fun decomposition (x: Int): MutableList<Int>{
+    var x1 = x
+    var i = 0
+    val list = mutableListOf(0, 0, 0)
+    while (x1 > 0) {
+        list.add(i, x1 % 10)
+        i++
+        x1 /= 10
+    }
+    return list
+}
+
 fun russian(n: Int): String {
-    val listf = mutableListOf(0, 0, 0)
-    val lists = mutableListOf(0, 0, 0)
-    val listc = mutableListOf<String>()
+    var listf: MutableList<Int>
+    var lists = mutableListOf(0, 0, 0)
+    var listc = listOf("")
     var f = 0
     var s = -1
     var st = s
     var th = ""
     if (n > 999) {
         f = n % 1000
-        var i = 0
-        while (f > 0) {
-            listf.add(i, f % 10)
-            i++
-            f /= 10
-        }
+       listf = decomposition(f)
         s = n / 1000
         st = s
-        i = 0
-        while (s > 0) {
-            lists.add(i, s % 10)
-            i++
-            s /= 10
-        }
+       lists = decomposition(s)
     } else {
         f = n
-        var i = 0
-        while (f > 0) {
-            listf.add(i, f % 10)
-            i++
-            f /= 10
-        }
+        listf = decomposition(f)
     }
     val list1 = spwhen(listf, 0)
     var list2: List<String> = listOf()
@@ -367,13 +358,14 @@ fun russian(n: Int): String {
     if (s != -1) {
         val s10 = st % 100
         val s1 = s10 % 10
-        th = when {
-            s10 in 11..19 -> " тысяч"
-            s1 in 2..4 -> " тысячи"
-            s1 == 1 -> " тысяча"
-            else -> " тысяч"
+         th  = when {
+            s10 in 11..19 -> "тысяч"
+            s1 in 2..4 -> "тысячи"
+            s1 == 1 -> "тысяча"
+            else -> "тысяч"
         }
     }
-    if ((list1 != listc) && (list2 != listc)) th += " "
-    return list2.joinToString(separator = " ") + th + list1.joinToString(separator = " ")
+    listc = if (s != -1) list2 + th + list1
+    else list1
+    return listc.joinToString (separator = " ")
 }

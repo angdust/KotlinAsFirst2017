@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import lesson1.task1.accountInThreeYears
+
 /**
  * Пример
  *
@@ -65,48 +67,37 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
+
+fun daysInMonth(day: Int, month: Int, year: Int): Int {
+    var cday = -1
+    when {
+        (month <= 7) && (month % 2 == 1) && (day <= 31) -> cday = day
+        (month > 7) && (month % 2 == 0) && (day <= 31) -> cday = day
+        (month != 2) && (month <= 7) && (month % 2 == 0) && (day <= 30) -> cday = day
+        (month != 2) && (month > 7) && (month % 2 == 1) && (day <= 30) -> cday = day
+        (month == 2) && (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) && (day <= 29) -> cday = day
+        (month == 2) && (((year % 4 != 0) || (year % 100 == 0)) || (year % 400 != 0)) && (day <= 28) -> cday = day
+    }
+    return cday
+}
+
 fun dateStrToDigit(str: String): String {
     val x = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
-    val parts = str.split(" ")
+    val str1 = str.split(" ")
     try {
         var day = 0
         var month = 0
-        var monthS = ""
         var year = 0
-        val str1 = mutableListOf("", "", "")
-        for (part in parts) {
-            str1.add(part)
-        }
-        if ((str1[3] == "") or (str1.size > 6)) return ""
+        if (str1.size != 3) return ""
         else {
-            if (str1[5].toInt() > 0) year = str1[5].toInt()
-            for (i in 0 until x.size) {
-                if (str1[4] == x[i]) {
-                    month = i + 1
-                }
-            }
-            if (month != 0) {
-                when {
-                    (month <= 7) && (month % 2 == 1) && (str1[3].toInt() <= 31) -> day = str1[3].toInt()
-                    (month > 7) && (month % 2 == 0) && (str1[3].toInt() <= 31) -> day = str1[3].toInt()
-                    (month != 2) && (month <= 7) && (month % 2 == 0) && (str1[3].toInt() <= 30) -> day = str1[3].toInt()
-                    (month != 2) && (month > 7) && (month % 2 == 1) && (str1[3].toInt() <= 30) -> day = str1[3].toInt()
-                    (month == 2) && (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
-                            && (str1[3].toInt() <= 29) -> day = str1[3].toInt()
-                    (month == 2) && (((year % 4 != 0) || (year % 100 == 0)) || (year % 400 != 0))
-                            && (str1[3].toInt() <= 28) -> day = str1[3].toInt()
-                }
-            }
-            monthS = if (month < 10) "0" + month.toString()
-            else month.toString()
-            var dayS = day.toString()
-            dayS = if (day < 10) "0" + dayS
-            else dayS
-            if (month != 0) return dayS + "." + monthS + "." + year.toString()
+            if (str1[2].toInt() > 0) year = str1[2].toInt()
+            month = x.indexOf(str1[1]) + 1
+            if (month < 1) return ""
+            day = daysInMonth(str1[0].toInt(), month, year)
+            return String.format("%02d.%02d.%04d", day, month, year)
         }
-        return ""
-    } catch (month: IndexOutOfBoundsException) {
+    } catch (month: NumberFormatException) {
         return ""
     }
 
@@ -131,31 +122,18 @@ fun dateDigitToStr(digital: String): String {
         for (part in parts) {
             digital1.add(part.toInt())
         }
-        if (digital1.size == 3) {
+        return if (parts.size != 3) ""
+        else {
             if (digital1[2] > 0) {
                 year = digital1[2]
             }
-            for (i in 0..12) {
+            if (digital1[1] == 0) return ""
+            for (i in 0..11) {
                 if (digital1[1] == i) mounth = x[i - 1]
             }
-            if (digital1[1] != 0) {
-                when {
-                    (digital1[1] <= 7) && (digital1[1] % 2 == 1) && (digital1[0] <= 31) -> day = digital1[0]
-                    (digital1[1] > 7) && (digital1[1] % 2 == 0) && (digital1[0] <= 31) -> day = digital1[0]
-                    (digital1[1] != 2) && (digital1[1] <= 7) && (digital1[1] % 2 == 0) && (digital1[0] <= 30)
-                    -> day = digital1[0]
-                    (digital1[1] != 2) && (digital1[1] > 7) && (digital1[1] % 2 == 1) && (digital1[0] <= 30)
-                    -> day = digital1[0]
-                    (digital1[1] == 2) && (((digital1[2] % 4 == 0) && (digital1[2] % 100 != 0)) || (digital1[2] % 400 == 0))
-                            && (digital1[0] <= 29) -> day = digital1[0]
-                    (digital1[1] == 2) && (((digital1[2] % 4 != 0) || (digital1[2] % 100 == 0)) || (digital1[2] % 400 != 0))
-                            && (digital1[0] <= 28) -> day = digital1[0]
-                }
-            }
-            return day.toString() + " " + mounth + " " + year.toString()
-        } else return ""
-    } catch (digital1: ArrayIndexOutOfBoundsException) {
-        return ""
+            if (digital1[1] != 0) day = daysInMonth(digital1[0], digital1[1], digital1[2])
+           String.format("%d %s %d", day, mounth, year)
+        }
     } catch (part: NumberFormatException) {
         return ""
     }
@@ -178,7 +156,7 @@ fun flattenPhoneNumber(phone: String): String {
     val phone1 = mutableListOf<Int>()
     var k = 0
     if (phone != "") {
-        if (phone[0] == '+') k = 1
+         k = 1
         return try {
             for (part in parts) {
                 if (part != "") phone1.add(part.toInt())
@@ -202,17 +180,13 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val parts = jumps.split(" ", "-", "%")
-    val results = mutableListOf<Int>()
+    val parts = jumps.split(" ").filter {(it != "-") && (it != "%")}
     var max = -1
+    val results:MutableList<Int>  = mutableListOf()
     return try {
-        for (part in parts) {
-            if (part != "") results.add(part.toInt())
-        }
-        for (i in results) {
-            if (i > max) max = i
-        }
-        max
+        for (part in parts)
+             results.add(part.toInt())
+        results.max()!!
 
     } catch (part: NumberFormatException) {
         -1
@@ -241,18 +215,18 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val expressinon1 = expression.split(" ")
+    val expression1 = expression.split(" ")
     var sum = 0
     try {
-        sum = expressinon1[0].toInt()
+        sum = expression1[0].toInt()
     } catch (sum: NumberFormatException) {
         throw IllegalArgumentException()
     }
     try {
-        for (i in 2 until expressinon1.size step 2) {
+        for (i in 2 until expression1.size step 2) {
             when {
-                expressinon1[i - 1] == "+" -> sum += expressinon1[i].toInt()
-                expressinon1[i - 1] == "-" -> sum -= expressinon1[i].toInt()
+                expression1[i - 1] == "+" -> sum += expression1[i].toInt()
+                expression1[i - 1] == "-" -> sum -= expression1[i].toInt()
                 else -> throw IllegalArgumentException()
             }
         }
@@ -286,35 +260,32 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    val description1 = description.split(" ", ";")
-    val correctDescription = mutableListOf<String>()
+    val correctDescription = description.split(" ", "; ").filter{ it !=""}
     var max = 0.0
-    var k = 1
+    var k = 0
     try {
-        max = description1[1].toDouble()
-    } catch (max: Exception) {
+        if (correctDescription.size >= 2)
+        max = correctDescription[1].toDouble()
+        else return ""
+    } catch (max: NumberFormatException) {
         return ""
-    }
-    for (part in description1) {
-        if (part != "") correctDescription.add(part)
     }
     try {
         for (i in 3 until correctDescription.size step 2) {
             if (correctDescription[i].toDouble() >= 0.0) {
                 if (correctDescription[i].toDouble() > max) {
                     max = correctDescription[i].toDouble()
-                    k = i
+                    k = i - 1
                 }
             } else {
                 return ""
-                break
             }
         }
     } catch (i: NumberFormatException) {
         return ""
     }
 
-    return correctDescription[k - 1]
+    return correctDescription[k]
 }
 
 /**
