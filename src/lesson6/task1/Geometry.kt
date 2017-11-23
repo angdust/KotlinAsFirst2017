@@ -152,9 +152,12 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
+
+fun atanForAngle(a: Point, b: Point): Double = atan(abs(a.y - b.y) / abs(a.x - b.x))
+
 fun lineBySegment(s: Segment): Line {
     val angle = if (s.end.x - s.begin.x == 0.0) PI / 2
-    else atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
+    else atanForAngle(s.begin, s.end)
     return Line(s.begin, angle)
 }
 
@@ -165,7 +168,7 @@ fun lineBySegment(s: Segment): Line {
  */
 fun lineByPoints(a: Point, b: Point): Line {
     val angle = if (a.x - b.x == 0.0) PI / 2
-    else atan(abs(a.y - b.y) / abs(a.x - b.x))
+    else atanForAngle(a, b)
     return Line(a, angle)
 }
 
@@ -176,9 +179,10 @@ fun lineByPoints(a: Point, b: Point): Line {
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val c = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
-    var angle = if (a.x - b.x == 0.0) 0.0
-    else if (atan(abs(a.y - b.y) / abs(a.x - b.x)) >= PI/2) atan(abs(a.y - b.y) / abs(a.x - b.x)) - PI/2
-    else atan(abs(a.y - b.y) / abs(a.x - b.x)) + PI/2
+    var angle = if (a.x - b.x == 0.0) PI / 2
+    else atanForAngle(a, b)
+    if (angle >= PI / 2) angle -= PI / 2
+    else angle += PI / 2
     return Line(c, angle)
 }
 
