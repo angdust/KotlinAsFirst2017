@@ -203,11 +203,10 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val pac = bisectorByPoints(a, c)
-    val pca = bisectorByPoints(c, b)
-    return Circle(a, 5.0)
-}
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+//val pac = bisectorByPoints(a, c)
+// val pca = bisectorByPoints(c, b)
+
 
 /**
  * Очень сложная
