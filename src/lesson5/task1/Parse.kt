@@ -2,7 +2,9 @@
 
 package lesson5.task1
 
+import com.sun.org.apache.regexp.internal.RE
 import lesson1.task1.accountInThreeYears
+import java.util.regex.Pattern
 
 /**
  * Пример
@@ -128,11 +130,11 @@ fun dateDigitToStr(digital: String): String {
                 year = digital1[2]
             }
             if (digital1[1] == 0) return ""
-            for (i in 0..11) {
+            for (i in 1..12) {
                 if (digital1[1] == i) mounth = x[i - 1]
             }
             if (digital1[1] != 0) day = daysInMonth(digital1[0], digital1[1], digital1[2])
-           String.format("%d %s %d", day, mounth, year)
+            String.format("%d %s %d", day, mounth, year)
         }
     } catch (part: NumberFormatException) {
         return ""
@@ -156,7 +158,9 @@ fun flattenPhoneNumber(phone: String): String {
     val phone1 = mutableListOf<Int>()
     var k = 0
     if (phone != "") {
-         k = 1
+        if (phone.matches(Regex("\\+?[ ]*[0-9]+[ -]*(\\([-0-9 ]+\\))?[-0-9 ]*"))) {
+            if (phone[0] == '+') k = 1
+        } else return ""
         return try {
             for (part in parts) {
                 if (part != "") phone1.add(part.toInt())
@@ -180,20 +184,17 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val parts = jumps.split(" ").filter {(it != "-") && (it != "%")}
+    val parts = jumps.split(" ").filter { (it != "-") && (it != "%") }
     var max = -1
-    val results:MutableList<Int>  = mutableListOf()
-    return try {
+    val results: MutableList<Int> = mutableListOf()
+    try {
         for (part in parts)
             results.add(part.toInt())
-        results.max()!!
-
     } catch (part: NumberFormatException) {
-        -1
-    } catch (results: NullPointerException) {
-        -1
+        return -1
     }
-
+    return if (results.isNotEmpty()) results.max()!!
+    else -1
 }
 
 /**
@@ -263,12 +264,12 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    val correctDescription = description.split(" ", "; ").filter{ it !=""}
+    val correctDescription = description.split(" ", "; ").filter { it != "" }
     var max = 0.0
     var k = 0
     try {
         if (correctDescription.size >= 2)
-        max = correctDescription[1].toDouble()
+            max = correctDescription[1].toDouble()
         else return ""
     } catch (max: NumberFormatException) {
         return ""
