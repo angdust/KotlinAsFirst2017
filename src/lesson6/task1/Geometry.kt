@@ -154,7 +154,6 @@ class Line private constructor(val b: Double, val angle: Double) {
  */
 
 fun atanForAngle(a: Point, b: Point): Double {
-    if (a.x - a.x == 0.0) return PI / 2
     var angle = atan(abs(a.y - b.y) / abs(a.x - b.x))
     if (angle >= PI) angle -= PI
     if (angle < 0.0) angle += PI
@@ -180,7 +179,9 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val c = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
-    val angle = atanForAngle(a, b)
+    var angle = atanForAngle(a, b)
+    if (angle >= PI / 2) angle -= PI / 2
+    else angle += PI / 2
     return Line(c, angle)
 }
 
