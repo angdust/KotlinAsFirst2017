@@ -126,7 +126,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
 
-    constructor(point: Point, angle: Double): this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
+    constructor(point: Point, angle: Double) : this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
 
     /**
      * Средняя
@@ -153,11 +153,16 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 
-fun atanForAngle(a: Point, b: Point): Double = atan(abs(a.y - b.y) / abs(a.x - b.x))
+fun atanForAngle(a: Point, b: Point): Double {
+    if (a.x - a.x == 0.0) return PI / 2
+    var angle = atan(abs(a.y - b.y) / abs(a.x - b.x))
+    if (angle >= PI) angle -= PI
+    if (angle < 0.0) angle += PI
+    return angle
+}
 
 fun lineBySegment(s: Segment): Line {
-    val angle = if (s.end.x - s.begin.x == 0.0) PI / 2
-    else atanForAngle(s.begin, s.end)
+    val angle = atanForAngle(s.begin, s.end)
     return Line(s.begin, angle)
 }
 
@@ -166,11 +171,7 @@ fun lineBySegment(s: Segment): Line {
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line {
-    val angle = if (a.x - b.x == 0.0) PI / 2
-    else atanForAngle(a, b)
-    return Line(a, angle)
-}
+fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 
 /**
  * Сложная
@@ -179,10 +180,7 @@ fun lineByPoints(a: Point, b: Point): Line {
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val c = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
-    var angle = if (a.x - b.x == 0.0) PI / 2
-    else atanForAngle(a, b)
-    if (angle >= PI / 2) angle -= PI / 2
-    else angle += PI / 2
+    val angle = atanForAngle(a, b)
     return Line(c, angle)
 }
 
