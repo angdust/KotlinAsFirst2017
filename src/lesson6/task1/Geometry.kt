@@ -154,7 +154,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  */
 
 fun atanForAngle(a: Point, b: Point): Double {
-    var angle = atan(abs(a.y - b.y) / abs(a.x - b.x))
+    var angle = atan((a.y - b.y) / (a.x - b.x))
     if (angle >= PI) angle -= PI
     if (angle < 0.0) angle += PI
     return angle
