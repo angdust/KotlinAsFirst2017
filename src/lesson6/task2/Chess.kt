@@ -38,6 +38,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     if (notation.length != 2) throw IllegalArgumentException()
+    if (!notation[1].toString().matches(Regex("[0-9]"))) throw IllegalArgumentException()
     val x = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
     var c = -1
     val column = notation[0]
