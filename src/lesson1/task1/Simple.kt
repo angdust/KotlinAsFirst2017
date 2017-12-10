@@ -125,3 +125,32 @@ fun numberRevert(number: Int): Int {
     return t1 * 100 + t2 * 10 + t3
 
 }
+
+fun myFun2(text: String): Set<String> {
+    val result = mutableSetOf<String>()
+    val lines = text.split("\n")
+    val table = mutableMapOf<String, MutableList<Int>>()
+    val regex = Regex("([\\d\\w_]+) (\\d{1,2}):(\\d{2})")
+    for (line in lines) {
+        val match = regex.matchEntire(line)
+        if (match == null)
+            return setOf<String>()
+        val username = match.groupValues[1]
+        val time = match.groupValues[2].toInt() * 60 + match.groupValues[3].toInt()
+        if (!table.containsKey(username))
+            table.put(username, mutableListOf(time))
+        else {
+            table[username]!!.add(time)
+        }
+    }
+    table.keys.forEach {
+        val list = table[it]!!.sorted()
+        if (list.size != 1) {
+            for (i in 0 until list.size - 1) {
+                if (list[i + 1] - list[i] < 2)
+                    result.add(it)
+            }
+        }
+    }
+    return result
+}

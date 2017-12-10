@@ -69,6 +69,7 @@ class Tests {
         assertEquals(-1, bestLongJump("% - - % -"))
         assertEquals(754, bestLongJump("700 717 707 % 754"))
         assertEquals(-1, bestLongJump("700 + 700"))
+        assertEquals(-1, bestLongJump(""))
 
     }
 
@@ -133,5 +134,13 @@ class Tests {
         assertEquals(listOf(1, 1, 1, 0, 0, -1, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 17))
         assertEquals(listOf(0, 6, 5, 4, 3, 2, 1, 0, -1, -1, -2),
                 computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 256))
+    }
+
+    @Test
+    fun myFun() {
+        assertEquals("white, blue, red -> Ivan Ivanov can, gray, milk -> Clo Cla", myFun(listOf("Ivanov   Ivan Ivanovich:   white,  blue, red", "Cla Clo Cli:  can,    gray, milk")))
+        assertEquals("", myFun(listOf("Ivanov Ivan Ivanovich: white,  blue, red", "Cla Clo   Cli:  can,    gray, milk, red")))
+        assertEquals("white, blue, red -> Ivan Ivanov",
+                myFun(listOf("Ivanov Ivan Ivanovich: white,  blue, red", "Cla Clo Cli:  can,    gray, milk", "Ken Kon Kan: can, sun, bike")))
     }
 }

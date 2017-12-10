@@ -95,4 +95,15 @@ class Tests {
         assertEquals(874, numberRevert(478))
         assertEquals(201, numberRevert(102))
     }
+
+    @Test
+    fun myFun2() {
+        assertEquals(setOf<String>(), myFun2("Nagibator1992 10:05"))
+        assertEquals(setOf<String>(), myFun2("Nagibator19921*10:05"))
+        assertEquals(setOf<String>(), myFun2("Nagibator1992 1005"))
+        assertEquals(setOf<String>(), myFun2("Nagibator1992 10:ab"))
+        assertEquals(setOf<String>(), myFun2("Nagibator1992 10:05\nAlesha 9:56\nMasya 11:44"))
+        assertEquals(setOf<String>("Nagibator1992"), myFun2("Nagibator1992 10:05\nAlesha 10:06\nNagibator1992 10:06"))
+        assertEquals(setOf<String>("Nagibator1992"), myFun2("Nagibator1992 10:05\nAlesha 10:06\nNagibator1992 10:06\nNagibator1992 13:55\nNagibator1992 13:56"))
+    }
 }

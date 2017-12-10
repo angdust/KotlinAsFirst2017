@@ -87,18 +87,16 @@ fun dateStrToDigit(str: String): String {
     val x = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
     val str1 = str.split(" ")
+    if (str1.size != 3) return ""
     try {
         var day = 0
         var month = 0
         var year = 0
-        if (str1.size != 3) return ""
-        else {
-            if (str1[2].toInt() > 0) year = str1[2].toInt()
-            month = x.indexOf(str1[1]) + 1
-            if (month < 1) return ""
-            day = daysInMonth(str1[0].toInt(), month, year)
-            return String.format("%02d.%02d.%d", day, month, year)
-        }
+        if (str1[2].toInt() > 0) year = str1[2].toInt()
+        month = x.indexOf(str1[1]) + 1
+        if (month < 1) return ""
+        day = daysInMonth(str1[0].toInt(), month, year)
+        return String.format("%02d.%02d.%d", day, month, year)
     } catch (month: NumberFormatException) {
         return ""
     }
@@ -120,22 +118,20 @@ fun dateDigitToStr(digital: String): String {
     var mounth = ""
     var day = 0
     var year = 0
+    if (parts.size != 3) return ""
     try {
         for (part in parts) {
             digital1.add(part.toInt())
         }
-        return if (parts.size != 3) ""
-        else {
-            if (digital1[2] > 0) {
-                year = digital1[2]
-            }
-            if (digital1[1] == 0) return ""
-            for (i in 1..12) {
-                if (digital1[1] == i) mounth = x[i - 1]
-            }
-            if (digital1[1] != 0) day = daysInMonth(digital1[0], digital1[1], digital1[2])
-            String.format("%d %s %d", day, mounth, year)
+        if (digital1[2] > 0) {
+            year = digital1[2]
         }
+        if (digital1[1] == 0) return ""
+        for (i in 0..11) {
+            if (digital1[1] == i + 1) mounth = x[i]
+        }
+        if (digital1[1] != 0) day = daysInMonth(digital1[0], digital1[1], digital1[2])
+        return String.format("%d %s %d", day, mounth, year)
     } catch (part: NumberFormatException) {
         return ""
     }
@@ -157,20 +153,19 @@ fun flattenPhoneNumber(phone: String): String {
     val parts = phone.split(" ", "(", ")", "-", "+")
     val phone1 = mutableListOf<Int>()
     var k = 0
-    if (phone != "") {
-        if (phone.matches(Regex("\\+?[ ]*[0-9]+[ -]*(\\([-0-9 ]+\\))?[-0-9 ]*"))) {
-            if (phone[0] == '+') k = 1
-        } else return ""
-        return try {
-            for (part in parts) {
-                if (part != "") phone1.add(part.toInt())
-            }
-            if (k == 1) "+" + phone1.joinToString(separator = "")
-            else phone1.joinToString(separator = "")
-        } catch (part: NumberFormatException) {
-            ""
-        }
+    if (phone != "") return ""
+    if (phone.matches(Regex("\\+?[ ]*[0-9]+[ -]*(\\([-0-9 ]+\\))?[-0-9 ]*"))) {
+        if (phone[0] == '+') k = 1
     } else return ""
+    return try {
+        for (part in parts) {
+            if (part != "") phone1.add(part.toInt())
+        }
+        if (k == 1) "+" + phone1.joinToString(separator = "")
+        else phone1.joinToString(separator = "")
+    } catch (part: NumberFormatException) {
+        return ""
+    }
 }
 
 /**
@@ -193,8 +188,7 @@ fun bestLongJump(jumps: String): Int {
     } catch (part: NumberFormatException) {
         return -1
     }
-    return if (results.isNotEmpty()) results.max()!!
-    else -1
+    return results.max() ?: -1
 }
 
 /**
@@ -342,3 +336,47 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+fun myFun(people: List<String>): String {
+    val people1: MutableList<List<String>> = mutableListOf()
+    var spart = ""
+    var result: List<String>
+    var result1 = mutableListOf<String>()
+    var k = 0
+    for (part in people) {
+        spart = part.replace(Regex(",[ ]*|:[ ]*|[ ]+"), ",")
+        people1.add(spart.split(","))
+    }
+    for (i in 0 until people1.size - 1) {
+        k = 0
+        for (j in i + 1 until people1.size) {
+            for (i1 in 3 until people1[i].size)
+                for (j1 in 3 until people1[j].size)
+                    if (people1[i][i1] == people1[j][j1]) k = 1
+        }
+        if (k == 0) {
+            result = spget(people1[i])
+            result1.add(result.joinToString(separator = ", ") + " -> " + people1[i][1] + " " + people1[i][0])
+        }
+    }
+    k = 0
+    val i = people1.size - 1
+    for (j in 0 until people1.size - 1) {
+        for (i1 in 3 until people1[i].size)
+            for (j1 in 3 until people1[j].size)
+                if (people1[i][i1] == people1[j][j1]) k = 1
+    }
+    if (k == 0) {
+        result = spget(people1[i])
+        result1.add(result.joinToString(separator = ", ") + " -> " + people1[i][1] + " " + people1[i][0])
+    }
+    return result1.joinToString(separator = " ")
+}
+
+fun spget(list: List<String>): List<String> {
+    val list1 = mutableListOf<String>()
+    for (i in 3 until list.size)
+        list1.add(list[i])
+    return list1
+}
+

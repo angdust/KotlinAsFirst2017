@@ -193,14 +193,12 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    return if (list.isNotEmpty()) {
-        var x = 0.0
-        for (i in 0 until list.size) {
-            x += list[i]
-            list[i] = x
-        }
-        list
-    } else list
+    var x = 0.0
+    for (i in 0 until list.size) {
+        x += list[i]
+        list[i] = x
+    }
+    return list
 }
 
 /**
@@ -213,12 +211,12 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     val list = mutableListOf<Int>()
     var n1 = n
-        for (i in 2..Math.sqrt(n.toDouble()).toInt()) {
-            while (n1 % i == 0) {
-                list.add(i)
-                n1 /= i
-            }
+    for (i in 2..Math.sqrt(n.toDouble()).toInt()) {
+        while (n1 % i == 0) {
+            list.add(i)
+            n1 /= i
         }
+    }
     if (n1 != 1) list.add(n1)
 
     return list
@@ -305,22 +303,18 @@ fun spwhen(list: List<Int>, k: Int): MutableList<String> {
     val x20 = listOf("одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать",
             "семнадцать", "восемнадцать", "девятнадцать")
     val list1 = mutableListOf<String>()
-    for (i in list.size - 1 downTo 0) {
-        if (list[i] != 0) {
-            when {
-                (i == 0) && (list[1] != 1) && (k == 0) -> list1.add(x1[list[i] - 1])
-                (i == 0) && (list[1] != 1) && (k == 1) -> list1.add(x10[list[i] - 1])
-                (i == 1) && (list[1] == 1) && (list[0] == 0) -> list1.add(x2[list[i] - 1])
-                (i == 0) && (list[1] == 1) -> list1.add(x20[list[i] - 1])
-                (i == 1) && (list[1] != 1) -> list1.add(x2[list[i] - 1])
-                i == 2 -> list1.add(x3[list[i] - 1])
-            }
-        }
-    }
+    if (list[2] != 0) list1.add(x3[list[2] - 1])
+    if ((list[1] != 0) && (list[1] != 1)) list1.add(x2[list[1] - 1])
+    else if ((list[1] == 1) && (list[0] == 0)) list1.add(x2[list[1] - 1])
+    if (list[0] != 0)
+        if (list[1] != 1) {
+            if (k == 0) list1.add(x1[list[0] - 1])
+            else list1.add(x10[list[0] - 1])
+        } else list1.add(x20[list[0] - 1])
     return list1
 }
 
-fun decomposition (x: Int): MutableList<Int>{
+fun decomposition(x: Int): MutableList<Int> {
     var x1 = x
     var i = 0
     val list = mutableListOf(0, 0, 0)
@@ -333,7 +327,7 @@ fun decomposition (x: Int): MutableList<Int>{
 }
 
 fun russian(n: Int): String {
-    var listf: MutableList<Int>
+    val listf: MutableList<Int>
     var lists = mutableListOf(0, 0, 0)
     var listc = listOf("")
     var f = 0
@@ -342,10 +336,10 @@ fun russian(n: Int): String {
     var th = ""
     if (n > 999) {
         f = n % 1000
-       listf = decomposition(f)
+        listf = decomposition(f)
         s = n / 1000
         st = s
-       lists = decomposition(s)
+        lists = decomposition(s)
     } else {
         f = n
         listf = decomposition(f)
@@ -358,7 +352,7 @@ fun russian(n: Int): String {
     if (s != -1) {
         val s10 = st % 100
         val s1 = s10 % 10
-         th  = when {
+        th = when {
             s10 in 11..19 -> "тысяч"
             s1 in 2..4 -> "тысячи"
             s1 == 1 -> "тысяча"
@@ -367,5 +361,5 @@ fun russian(n: Int): String {
     }
     listc = if (s != -1) list2 + th + list1
     else list1
-    return listc.joinToString (separator = " ")
+    return listc.joinToString(separator = " ")
 }
