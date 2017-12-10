@@ -153,7 +153,7 @@ fun flattenPhoneNumber(phone: String): String {
     val parts = phone.split(" ", "(", ")", "-", "+")
     val phone1 = mutableListOf<Int>()
     var k = 0
-    if (phone != "") return ""
+    if (phone == "") return ""
     if (phone.matches(Regex("\\+?[ ]*[0-9]+[ -]*(\\([-0-9 ]+\\))?[-0-9 ]*"))) {
         if (phone[0] == '+') k = 1
     } else return ""
@@ -180,7 +180,6 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     val parts = jumps.split(" ").filter { (it != "-") && (it != "%") }
-    var max = -1
     val results: MutableList<Int> = mutableListOf()
     try {
         for (part in parts)
@@ -220,6 +219,7 @@ fun plusMinus(expression: String): Int {
     } catch (sum: NumberFormatException) {
         throw IllegalArgumentException()
     }
+    if (expression1.size == 2) throw IllegalArgumentException()
     try {
         for (i in 2 until expression1.size step 2) {
             when {
