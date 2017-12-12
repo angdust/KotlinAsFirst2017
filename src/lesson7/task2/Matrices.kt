@@ -93,6 +93,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
         }
         yb++
     }
+    if ((height == width) && (height % 2 == 1)) result[height / 2, width / 2] = height * width
     return result
 }
 
@@ -141,6 +142,7 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
         yb++
         c++
     }
+    if ((height == width) && (height % 2 == 1)) result[height / 2, width / 2] = c
     return result
 }
 
