@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson7.task2
 
 import lesson7.task1.Matrix
@@ -59,7 +60,41 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 1)
+    var xb = 0
+    var ye = width - 1
+    var yb = 0
+    var xe = height - 1
+    var c = 1
+    while (c < height * width) {
+        for (i in yb..ye) {
+            if (c > height * width) break
+            result[xb, i] = c
+            c++
+        }
+        xb++
+        for (i in xb..xe) {
+            if (c > height * width) break
+            result[i, ye] = c
+            c++
+        }
+        ye--
+        for (i in ye downTo yb) {
+            if (c > height * width) break
+            result[xe, i] = c
+            c++
+        }
+        xe--
+        for (i in xe downTo xb) {
+            if (c > height * width) break
+            result[i, yb] = c
+            c++
+        }
+        yb++
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -75,7 +110,39 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 1)
+    var xb = 0
+    var ye = width - 1
+    var yb = 0
+    var xe = height - 1
+    var c = 1
+    var k = 1
+    while (k < height * width) {
+        for (i in yb..ye) {
+            result[xb, i] = c
+            k++
+        }
+        xb++
+        for (i in xb..xe) {
+            result[i, ye] = c
+            k++
+        }
+        ye--
+        for (i in ye downTo yb) {
+            result[xe, i] = c
+            k++
+        }
+        xe--
+        for (i in xe downTo xb) {
+            result[i, yb] = c
+            k++
+        }
+        yb++
+        c++
+    }
+    return result
+}
 
 /**
  * Сложная

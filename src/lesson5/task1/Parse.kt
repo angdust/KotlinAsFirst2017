@@ -127,9 +127,7 @@ fun dateDigitToStr(digital: String): String {
             year = digital1[2]
         }
         if (digital1[1] == 0) return ""
-        for (i in 0..11) {
-            if (digital1[1] == i + 1) mounth = x[i]
-        }
+        mounth = x[digital1[1] - 1]
         if (digital1[1] != 0) day = daysInMonth(digital1[0], digital1[1], digital1[2])
         return String.format("%d %s %d", day, mounth, year)
     } catch (part: NumberFormatException) {
