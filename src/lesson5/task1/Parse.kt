@@ -177,7 +177,7 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val parts = jumps.split(" ").filter { (it != "-") && (it != "%") }
+    val parts = jumps.split(" ").filter { (it != "-") && (it != "%") && (it != "") }
     val results: MutableList<Int> = mutableListOf()
     try {
         for (part in parts)
