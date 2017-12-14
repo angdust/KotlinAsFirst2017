@@ -217,7 +217,7 @@ fun plusMinus(expression: String): Int {
     } catch (sum: NumberFormatException) {
         throw IllegalArgumentException()
     }
-    if (expression1.size == 2) throw IllegalArgumentException()
+    if ((expression1.size == 2) || (expression.length == 2)) throw IllegalArgumentException()
     try {
         for (i in 2 until expression1.size step 2) {
             when {
